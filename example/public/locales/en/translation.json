@@ -1,0 +1,24 @@
+{
+  "welcome": "Welcome to Vite + Shipi18n!",
+  "description": "This app demonstrates automatic translation at build time",
+  "greeting": "Hello, {{name}}!",
+  "message_count": "You have {{count}} message",
+  "message_count_plural": "You have {{count}} messages",
+  "ui": {
+    "language_selector": "Select Language",
+    "current_language": "Current language: {{lang}}",
+    "change_language": "Change Language"
+  },
+  "features": {
+    "title": "Features",
+    "auto_translate": "Automatic translation during build",
+    "caching": "Smart caching - only translates changed content",
+    "multi_lang": "Support for multiple languages",
+    "preserves": "Preserves placeholders like {{example}}"
+  },
+  "buttons": {
+    "learn_more": "Learn More",
+    "get_started": "Get Started",
+    "documentation": "Documentation"
+  }
+}
