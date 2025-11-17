@@ -194,13 +194,14 @@ module.exports = {
 
 ## Supported Languages
 
-The plugin supports 100+ languages including:
+The plugin supports **100+ languages** via Google Cloud Translation API, including:
 
 - **es** - Spanish
 - **fr** - French
 - **de** - German
 - **ja** - Japanese
 - **zh** - Chinese (Simplified)
+- **zh-TW** - Chinese (Traditional)
 - **pt** - Portuguese
 - **ru** - Russian
 - **ar** - Arabic
@@ -208,8 +209,15 @@ The plugin supports 100+ languages including:
 - **ko** - Korean
 - **it** - Italian
 - **nl** - Dutch
+- **pl** - Polish
+- **tr** - Turkish
+- **vi** - Vietnamese
+- **th** - Thai
+- **id** - Indonesian
+- **sv** - Swedish
+- **and 85+ more...**
 
-[See full list](https://shipi18n.com/docs/languages)
+See the [shipi18n-react-example](https://github.com/shipi18n/shipi18n-react-example/blob/main/src/constants/languages.js) repository for the complete list of 100+ supported language codes.
 
 ## Example Project
 
