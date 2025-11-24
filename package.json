@@ -4,6 +4,10 @@
   "description": "Vite plugin for automatic i18n translation at build time using Shipi18n API",
   "main": "src/index.js",
   "type": "module",
+  "scripts": {
+    "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
+    "test:watch": "NODE_OPTIONS='--experimental-vm-modules' jest --watch"
+  },
   "keywords": [
     "vite",
     "vite-plugin",
@@ -21,6 +25,7 @@
   "peerDependencies": {
     "vite": "^4.0.0 || ^5.0.0"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
 }
