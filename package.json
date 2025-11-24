@@ -4,6 +4,10 @@
   "description": "Vite plugin for automatic i18n translation at build time using Shipi18n API",
   "main": "src/index.js",
   "type": "module",
+  "files": [
+    "src/index.js",
+    "README.md"
+  ],
   "scripts": {
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
     "test:watch": "NODE_OPTIONS='--experimental-vm-modules' jest --watch"
