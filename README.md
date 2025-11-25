@@ -1,5 +1,11 @@
 # vite-plugin-shipi18n
 
+[![npm version](https://img.shields.io/npm/v/vite-plugin-shipi18n)](https://www.npmjs.com/package/vite-plugin-shipi18n)
+[![npm downloads](https://img.shields.io/npm/dw/vite-plugin-shipi18n)](https://www.npmjs.com/package/vite-plugin-shipi18n)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub last commit](https://img.shields.io/github/last-commit/Shipi18n/vite-plugin-shipi18n)](https://github.com/Shipi18n/vite-plugin-shipi18n)
+[![CI](https://github.com/Shipi18n/vite-plugin-shipi18n/actions/workflows/ci.yml/badge.svg)](https://github.com/Shipi18n/vite-plugin-shipi18n/actions)
+
 > Automatic i18n translation at build time for Vite projects
 
 Translate your locale files automatically during the build process using [Shipi18n](https://shipi18n.com) API. No manual copy-pasting, no external tools - just add the plugin and run `npm run build`.
