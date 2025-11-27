@@ -5,6 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub last commit](https://img.shields.io/github/last-commit/Shipi18n/vite-plugin-shipi18n)](https://github.com/Shipi18n/vite-plugin-shipi18n)
 [![CI](https://github.com/Shipi18n/vite-plugin-shipi18n/actions/workflows/ci.yml/badge.svg)](https://github.com/Shipi18n/vite-plugin-shipi18n/actions)
+[![codecov](https://codecov.io/gh/Shipi18n/vite-plugin-shipi18n/branch/main/graph/badge.svg)](https://codecov.io/gh/Shipi18n/vite-plugin-shipi18n)
 
 > Automatic i18n translation at build time for Vite projects
 
