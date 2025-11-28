@@ -96,6 +96,42 @@ The plugin will automatically:
 | `apiUrl` | `string` | Shipi18n production URL | Custom API URL (for self-hosted instances) |
 | `cache` | `boolean` | `true` | Enable smart caching |
 | `cacheDir` | `string` | `'node_modules/.cache/vite-plugin-shipi18n'` | Cache directory path |
+| `fallback` | `object` | `{ fallbackToSource: true, regionalFallback: true }` | Fallback options (see below) |
+
+### Fallback Options
+
+The plugin includes intelligent fallback handling for missing translations:
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `fallback.fallbackToSource` | `boolean` | `true` | Use source content when translation is missing |
+| `fallback.regionalFallback` | `boolean` | `true` | Fall back pt-BR → pt, zh-TW → zh when regional variant missing |
+
+**Example with fallback:**
+
+```javascript
+shipi18n({
+  apiKey: process.env.VITE_SHIPI18N_API_KEY,
+  targetLanguages: ['es', 'pt-BR', 'zh-TW'],
+  fallback: {
+    fallbackToSource: true,    // Use English if translation fails
+    regionalFallback: true,    // pt-BR falls back to pt if pt-BR fails
+  }
+})
+```
+
+**Build output:**
+```
+🌍 Shipi18n: Starting translation process...
+   Source: public/locales/en
+   Target languages: es, pt-BR, zh-TW
+   Found 2 source file(s)
+   ⏳ translation.json: Translating to 3 language(s)...
+   ✓ translation.json: Translation complete
+      ℹ️  pt-BR used pt translation (regional fallback)
+      ⚠️  zh-TW used source content (fallback)
+✅ Shipi18n: Translation complete!
+```
 
 ### Full Configuration Example
 
