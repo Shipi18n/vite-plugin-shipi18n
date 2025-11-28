@@ -14,6 +14,9 @@ import crypto from 'crypto'
  * @param {string} options.sourceLanguage - Source language code (default: 'en')
  * @param {boolean} options.cache - Enable caching (default: true)
  * @param {string} options.cacheDir - Cache directory (default: 'node_modules/.cache/vite-plugin-shipi18n')
+ * @param {Object} options.fallback - Fallback options
+ * @param {boolean} options.fallback.fallbackToSource - Use source content when translation missing (default: true)
+ * @param {boolean} options.fallback.regionalFallback - Enable pt-BR -> pt fallback (default: true)
  */
 export default function shipi18nPlugin(options = {}) {
   const {
@@ -24,8 +27,14 @@ export default function shipi18nPlugin(options = {}) {
     outputDir = 'public/locales',
     sourceLanguage = 'en',
     cache = true,
-    cacheDir = 'node_modules/.cache/vite-plugin-shipi18n'
+    cacheDir = 'node_modules/.cache/vite-plugin-shipi18n',
+    fallback = {}
   } = options
+
+  const {
+    fallbackToSource = true,
+    regionalFallback = true,
+  } = fallback
 
   // Validation
   if (!apiKey) {
@@ -110,6 +119,9 @@ export default function shipi18nPlugin(options = {}) {
           }
         }
 
+        // Process regional languages for fallback
+        const { processedTargets, regionalMap } = processRegionalLanguages(targetLanguages, regionalFallback)
+
         // Translate if not cached
         if (!translations) {
           console.log(`   ⏳ ${fileName}: Translating to ${targetLanguages.length} language(s)...`)
@@ -120,8 +132,19 @@ export default function shipi18nPlugin(options = {}) {
               apiUrl,
               json: sourceJson,
               sourceLanguage,
-              targetLanguages
+              targetLanguages: processedTargets
             })
+
+            // Apply fallback logic
+            translations = applyFallbacks(
+              translations,
+              sourceJson,
+              targetLanguages,
+              sourceLanguage,
+              fallbackToSource,
+              regionalFallback,
+              regionalMap
+            )
 
             // Save to cache
             if (cache) {
@@ -129,9 +152,34 @@ export default function shipi18nPlugin(options = {}) {
             }
 
             console.log(`   ✓ ${fileName}: Translation complete`)
+
+            // Log fallback info if any were used
+            if (translations.fallbackInfo && translations.fallbackInfo.used) {
+              const fi = translations.fallbackInfo
+              if (Object.keys(fi.regionalFallbacks).length > 0) {
+                for (const [lang, baseLang] of Object.entries(fi.regionalFallbacks)) {
+                  console.log(`      ℹ️  ${lang} used ${baseLang} translation (regional fallback)`)
+                }
+              }
+              if (fi.languagesFallbackToSource.length > 0) {
+                for (const lang of fi.languagesFallbackToSource) {
+                  console.log(`      ⚠️  ${lang} used source content (fallback)`)
+                }
+              }
+            }
           } catch (error) {
             console.error(`   ❌ ${fileName}: Translation failed - ${error.message}`)
-            continue
+
+            // Use source as fallback on error if enabled
+            if (fallbackToSource) {
+              console.log(`      ⚠️  Using source content as fallback for all languages`)
+              translations = {}
+              for (const lang of targetLanguages) {
+                translations[lang] = { ...sourceJson }
+              }
+            } else {
+              continue
+            }
           }
         }
 
@@ -186,4 +234,164 @@ async function translateJSON({ apiKey, apiUrl, json, sourceLanguage, targetLangu
 
   const data = await response.json()
   return data.translations || {}
+}
+
+/**
+ * Process regional language codes for fallback support
+ */
+function processRegionalLanguages(targetLanguages, regionalFallback) {
+  const regionalMap = {}
+  const processedTargets = []
+  const baseLanguagesAdded = new Set()
+
+  for (const lang of targetLanguages) {
+    if (lang.includes('-') && regionalFallback) {
+      const baseLang = lang.split('-')[0]
+      regionalMap[lang] = baseLang
+
+      if (!baseLanguagesAdded.has(baseLang) && !targetLanguages.includes(baseLang)) {
+        processedTargets.push(baseLang)
+        baseLanguagesAdded.add(baseLang)
+      }
+    }
+
+    if (!processedTargets.includes(lang)) {
+      processedTargets.push(lang)
+    }
+  }
+
+  return { processedTargets, regionalMap }
+}
+
+/**
+ * Apply fallback logic to translation results
+ */
+function applyFallbacks(result, sourceContent, targetLanguages, sourceLanguage, fallbackToSource, regionalFallback, regionalMap) {
+  const fallbackInfo = {
+    used: false,
+    languagesFallbackToSource: [],
+    regionalFallbacks: {},
+    keysFallback: {},
+  }
+
+  for (const lang of targetLanguages) {
+    const translation = result[lang]
+
+    // Case 1: Entire language missing
+    if (!translation || Object.keys(translation).length === 0) {
+      // Try regional fallback first
+      if (regionalFallback && regionalMap[lang]) {
+        const baseLang = regionalMap[lang]
+        const baseTranslation = result[baseLang]
+
+        if (baseTranslation && Object.keys(baseTranslation).length > 0) {
+          result[lang] = { ...baseTranslation }
+          fallbackInfo.used = true
+          fallbackInfo.regionalFallbacks[lang] = baseLang
+          continue
+        }
+      }
+
+      // Fall back to source
+      if (fallbackToSource) {
+        result[lang] = { ...sourceContent }
+        fallbackInfo.used = true
+        fallbackInfo.languagesFallbackToSource.push(lang)
+      }
+      continue
+    }
+
+    // Case 2: Check for missing keys
+    if (fallbackToSource && typeof translation === 'object') {
+      const missingKeys = findMissingKeys(sourceContent, translation)
+
+      if (missingKeys.length > 0) {
+        fallbackInfo.used = true
+        fallbackInfo.keysFallback[lang] = missingKeys
+
+        for (const key of missingKeys) {
+          const fallbackValue = getNestedValue(sourceContent, key)
+
+          // Try regional fallback first
+          if (regionalFallback && regionalMap[lang]) {
+            const baseLang = regionalMap[lang]
+            const baseTranslation = result[baseLang]
+            const baseValue = baseTranslation ? getNestedValue(baseTranslation, key) : undefined
+
+            if (baseValue !== undefined) {
+              setNestedValue(translation, key, baseValue)
+              continue
+            }
+          }
+
+          if (fallbackValue !== undefined) {
+            setNestedValue(translation, key, fallbackValue)
+          }
+        }
+      }
+    }
+  }
+
+  if (fallbackInfo.used) {
+    result.fallbackInfo = fallbackInfo
+  }
+
+  return result
+}
+
+/**
+ * Find missing keys in translation
+ */
+function findMissingKeys(source, translation, prefix = '') {
+  const missing = []
+
+  for (const key of Object.keys(source)) {
+    const fullKey = prefix ? `${prefix}.${key}` : key
+    const sourceValue = source[key]
+    const translationValue = translation[key]
+
+    if (translationValue === undefined || translationValue === null || translationValue === '') {
+      missing.push(fullKey)
+    } else if (
+      typeof sourceValue === 'object' &&
+      sourceValue !== null &&
+      !Array.isArray(sourceValue) &&
+      typeof translationValue === 'object' &&
+      translationValue !== null
+    ) {
+      missing.push(...findMissingKeys(sourceValue, translationValue, fullKey))
+    }
+  }
+
+  return missing
+}
+
+/**
+ * Get nested value from object using dot notation
+ */
+function getNestedValue(obj, path) {
+  return path.split('.').reduce((current, key) => {
+    if (current && typeof current === 'object' && key in current) {
+      return current[key]
+    }
+    return undefined
+  }, obj)
+}
+
+/**
+ * Set nested value in object using dot notation
+ */
+function setNestedValue(obj, path, value) {
+  const keys = path.split('.')
+  let current = obj
+
+  for (let i = 0; i < keys.length - 1; i++) {
+    const key = keys[i]
+    if (!(key in current) || typeof current[key] !== 'object') {
+      current[key] = {}
+    }
+    current = current[key]
+  }
+
+  current[keys[keys.length - 1]] = value
 }
