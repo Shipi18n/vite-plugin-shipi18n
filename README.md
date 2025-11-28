@@ -340,16 +340,39 @@ Subsequent builds: No, cached translations are used instantly.
 
 **Tip**: Cache `node_modules/.cache/vite-plugin-shipi18n/` in your CI/CD for faster builds.
 
+## Documentation & Resources
+
+📚 **Full Documentation:** [shipi18n.com/integrations/react](https://shipi18n.com/integrations/react)
+
+| Resource | Link |
+|----------|------|
+| **Getting Started** | [shipi18n.com](https://shipi18n.com) |
+| **API Reference** | [shipi18n.com/api](https://shipi18n.com/api) |
+| **i18next Best Practices** | [shipi18n.com/integrations/react](https://shipi18n.com/integrations/react) |
+| **Blog & Tutorials** | [shipi18n.com/blog](https://shipi18n.com/blog) |
+
+## Related Packages
+
+| Package | Description |
+|---------|-------------|
+| [@shipi18n/api](https://www.npmjs.com/package/@shipi18n/api) | Node.js SDK for programmatic use |
+| [@shipi18n/cli](https://www.npmjs.com/package/@shipi18n/cli) | CLI tool for translating files |
+| [i18next-shipi18n-backend](https://www.npmjs.com/package/i18next-shipi18n-backend) | i18next backend for dynamic loading |
+| [shipi18n-github-action](https://github.com/marketplace/actions/shipi18n-auto-translate) | GitHub Action for CI/CD |
+
+## Examples
+
+- [Node.js Example](https://github.com/Shipi18n/shipi18n-nodejs-example) - Basic usage examples
+- [Vue Example](https://github.com/Shipi18n/shipi18n-vue-example) - Vue 3 + vue-i18n integration
+
 ## License
 
 MIT
 
-## Support
-
-- [Documentation](https://shipi18n.com/docs)
-- [GitHub Issues](https://github.com/Shipi18n/vite-plugin-shipi18n/issues)
-- [Discord Community](https://discord.gg/shipi18n)
-
 ---
 
-Built with [Shipi18n](https://shipi18n.com) - Smart translation API for developers
+<p align="center">
+  <a href="https://shipi18n.com">shipi18n.com</a> ·
+  <a href="https://github.com/Shipi18n">GitHub</a> ·
+  <a href="https://shipi18n.com/pricing">Pricing</a>
+</p>
