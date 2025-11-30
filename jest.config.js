@@ -16,16 +16,12 @@ export default {
     '/coverage/'
   ],
   coverageReporters: ['text', 'lcov', 'clover'],
-  // Vite plugin buildStart hook requires integration testing with actual Vite
-  // builds rather than unit tests (complex fs and build lifecycle mocking).
-  // Core plugin logic (validation, hooks) is tested; buildStart hook and
-  // helper functions require file system and API mocking for full coverage.
   coverageThreshold: {
     global: {
-      branches: 10,
-      functions: 10,
-      lines: 5,
-      statements: 5,
+      branches: 50,
+      functions: 50,
+      lines: 50,
+      statements: 50,
     },
   },
 }

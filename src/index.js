@@ -238,8 +238,9 @@ async function translateJSON({ apiKey, apiUrl, json, sourceLanguage, targetLangu
 
 /**
  * Process regional language codes for fallback support
+ * @exported for testing
  */
-function processRegionalLanguages(targetLanguages, regionalFallback) {
+export function processRegionalLanguages(targetLanguages, regionalFallback) {
   const regionalMap = {}
   const processedTargets = []
   const baseLanguagesAdded = new Set()
@@ -265,8 +266,9 @@ function processRegionalLanguages(targetLanguages, regionalFallback) {
 
 /**
  * Apply fallback logic to translation results
+ * @exported for testing
  */
-function applyFallbacks(result, sourceContent, targetLanguages, sourceLanguage, fallbackToSource, regionalFallback, regionalMap) {
+export function applyFallbacks(result, sourceContent, targetLanguages, sourceLanguage, fallbackToSource, regionalFallback, regionalMap) {
   const fallbackInfo = {
     used: false,
     languagesFallbackToSource: [],
@@ -341,8 +343,9 @@ function applyFallbacks(result, sourceContent, targetLanguages, sourceLanguage, 
 
 /**
  * Find missing keys in translation
+ * @exported for testing
  */
-function findMissingKeys(source, translation, prefix = '') {
+export function findMissingKeys(source, translation, prefix = '') {
   const missing = []
 
   for (const key of Object.keys(source)) {
@@ -368,8 +371,9 @@ function findMissingKeys(source, translation, prefix = '') {
 
 /**
  * Get nested value from object using dot notation
+ * @exported for testing
  */
-function getNestedValue(obj, path) {
+export function getNestedValue(obj, path) {
   return path.split('.').reduce((current, key) => {
     if (current && typeof current === 'object' && key in current) {
       return current[key]
@@ -380,8 +384,9 @@ function getNestedValue(obj, path) {
 
 /**
  * Set nested value in object using dot notation
+ * @exported for testing
  */
-function setNestedValue(obj, path, value) {
+export function setNestedValue(obj, path, value) {
   const keys = path.split('.')
   let current = obj
 
