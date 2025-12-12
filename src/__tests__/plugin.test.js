@@ -220,10 +220,10 @@ describe('API Request Formatting', () => {
   });
 
   test('constructs correct API endpoint', () => {
-    const apiUrl = 'https://api.shipi18n.com';
+    const apiUrl = 'https://ydjkwckq3f.execute-api.us-east-1.amazonaws.com';
     const endpoint = `${apiUrl}/api/translate`;
 
-    expect(endpoint).toBe('https://api.shipi18n.com/api/translate');
+    expect(endpoint).toBe('https://ydjkwckq3f.execute-api.us-east-1.amazonaws.com/api/translate');
   });
 });
 
@@ -423,7 +423,7 @@ describe('Integration Scenarios', () => {
   test('full configuration creates valid plugin', () => {
     const plugin = shipi18nPlugin({
       apiKey: 'sk_live_abc123',
-      apiUrl: 'https://api.shipi18n.com',
+      apiUrl: 'https://ydjkwckq3f.execute-api.us-east-1.amazonaws.com',
       targetLanguages: ['es', 'fr', 'de', 'ja'],
       sourceDir: 'src/locales/en',
       outputDir: 'src/locales',
